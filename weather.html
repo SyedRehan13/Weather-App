@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Weather of City</title>
+    <script type="text/javascript">
+        function getWeather(event) {
+            event.preventDefault();
+
+            let cityname = document.weather.city.value.trim();
+            let api_key = "c1ea15041c62187fe209a7e6a9e112cb";
+            let api_url = `https://api.openweathermap.org/data/2.5/weather?q=${cityname}&appid=${api_key}&units=metric`;
+
+            fetch(api_url)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error("City not found");
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // display result in table
+                    let result = `
+    <table border="1" cellpadding="10" cellspacing="0" align = "center"
+           style="margin-top:20px; background-color: rgba(0, 0, 0, 0.6); color: white; border-radius: 8px;">
+        <tr><th colspan="2">Weather Result</th></tr>
+        <tr><td><b>City</b></td><td>${data.name}</td></tr>
+        <tr><td><b>Temperature</b></td><td>${data.main.temp} °C</td></tr>
+        <tr><td><b>Weather</b></td><td>${data.weather[0].description}</td></tr>
+        <tr><td><b>Humidity</b></td><td>${data.main.humidity}%</td></tr>
+    </table>
+`;
+
+                    document.getElementById("weatherResult").innerHTML = result;
+                })
+                .catch(function(error) {
+                    document.getElementById("weatherResult").innerHTML = "<p style='color:red;'>❌ City not found!</p>";
+                });
+        }
+    </script>
+</head>
+
+<body background="weather3.jpeg" bgproperties="fixed">
+
+    <!-- Rotating Earth Image -->
+    <div style="margin-top: 30px;" align="center">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif"
+             alt="Rotating Earth" width="150" height="150" style="border-radius: 50%;">
+    </div>
+
+    <!-- Weather Form -->
+    
+
+    <form name="weather" onsubmit="getWeather(event)">
+        <table border="0" cellpadding="10" cellspacing="0" align="center"
+               style="background-color: rgba(0, 0, 0, 0.5); border-radius: 10px;">
+            <tr>
+                <td colspan="2" align="center">
+                    <h2 style="color: white;">🌤️ Find your City's Weather</h2>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <label style="color: white; font-size: 18px;"><b>City Name:</b></label>
+                </td>
+                <td>
+                    <input type="text" name="city" placeholder="New York" required
+                           style="padding: 8px; border-radius: 6px; color: black;">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" value="Get Weather"
+                           style="padding: 10px 20px; border-radius: 6px; background-color: #007BFF; color: white; font-size: 16px;">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <!-- Weather Result Table -->
+    <div id="weatherResult" style="text-align: center; margin-top: 20px;"></div>
+
+</body>
+</html>
